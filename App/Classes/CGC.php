@@ -4,21 +4,35 @@ namespace App\Classes;
 use App\Interfaces\IGC;
 
  /**
-  * CGC (classe Gerenciar contacto) implementa o IGC (Interface Gerenciar Contacto) e extende a classe Contacto
+  * CGC (classe Gerenciar contacto) implementa o IGC (Interface Gerenciar Contacto).
   * @method adicionarContacto
   * @method editarContacto
   * @method excluirContacto
   * @method buscarContacto
   * @method listarContacto
+  * @param $contacto array
   */
 class CGC implements IGC{
 	/**
+	 * propriedade $contacto aramazena os dados do contacto em um array
+	 */
+	$contacto = array();
+	/**
 	 * adiciona um novo contacto
-	 * @param $contacto recebe um objecto contacto
+	 * @param contacto ($c) recebe um objecto contacto
 	 * @return boolean
 	 */
-	public function adicionarContacto($contacto):bool{
-		  
+	public function adicionarContacto($c):bool{
+		$contacto = [
+			$c->getNome(),
+			$c->getEmail(),
+			$c->getTelefone(),
+			$c->getEmpresa(),
+			$c->getNota(),
+			$c->getDataC(),
+			$c->getDataUA(),
+			$c->getEnd
+		];
 		return bool;
 	}
 	/**

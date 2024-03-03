@@ -34,18 +34,18 @@ abstract class CBD{
        	protected function consulta(string$sql,array$param=null){
 		$stm = $this->con;
 		$std = $stm->prepare($sql);
-		$key = array_keys($param);
-		$value = array_values($param);
 		$ret = false;
 	
 		$count = 0;
 		
 		if ($param){
+			$key = array_keys($param);
+		       	$value = array_values($param);
 			for($i = 0; $i < count($param); $i++){
 				$std->bindParam($key[$i],$value[$i]);
 				$count += 1;
 				if($count == count($param)){
-					$ret = $std->execute()?true:false;
+					//$ret = $std->execute()?true:false;
 				}
 			}
 		}else{

@@ -5,7 +5,7 @@ use App\Classes\CGC;
 use App\Classes\ContactoDAO;
 
 define("HOST","127.0.0.1");
-define("DB","TestePHP");
+define("DB","Contacto");
 define("USER","justino");
 define("PWD","16242324");
 
@@ -13,18 +13,20 @@ define("PWD","16242324");
 
 $bd = new ContactoDAO();
 
-//$b = $bd->selectContacto("");
+//$b = $bd->selectContacto("i");
+$data = new DateTime();
+$dataF = $data->format("Y-m-d H:i:s"); 
 
 $a = [
 	"contacto"=>
-	["nome"=>"Justino","sobrenome"=>"Kotingo", "alcunha"=>"Sedrik","dataC"=>date('d/m/Y'),"dateUA"=>date('d/m/Y')],
+	[":nome"=>"Justino",":sobrenome"=>"Kotingo", ":alcunha"=>"Sedrik",":dataC"=>$dataF,":dataUA"=>$dataF],
 
-	"telefone"=>["numero"=>"923567890","id_c"=>1],
-	"telefone1"=>["numero"=>"931459010","id_c"=>1],
-	"telefone2"=>["numero"=>"901234673","id_c"=>1],
+	"telefone"=>[":numero"=>"931678910",":id_c"=>4],
+	"telefone1"=>[":numero"=>"931459020",":id_c"=>4],
+	"telefone2"=>[":numero"=>"901834673",":id_c"=>4],
 
-	"email"=>["email"=>"j@gmail", "id_c"=>1],
-	"email2"=>["email"=>"jk@gmail","id_c"=>1]
+	"email"=>[":email"=>"jks@gmail", ":id_c"=>4],
+	"email2"=>[":email"=>"jkj@gmail",":id_c"=>4]
 ];
 
 $b = [
@@ -32,9 +34,30 @@ $b = [
 	[":nome"=>"Teresa Faustino",":numEst"=>"223457"]
 ];
 
-//$bd->insertContacto($b); 
+//$bd->insertContacto($a); 
 //$bd->consulta("insert into Estudante(nome, numEst)values(:nome, :numEst)",[":nome"=>"José Tua",":numEst"=>"24218"]);
 $c = [
-	"Estudante" => ["nome"=>"justino"]
+	"contacto" => ["nome"=>"justino"],
+	"telefone"=>["numero"=>"931459010"],
+	"email"=>[]
+	/*"empresa"=>["nome"=>"Apple"]*/
 ];
-$bd->SelectContacto($c);
+
+$f = $bd->SelectContacto($c);
+print_r($f);
+
+$up = [
+	"contacto"=> [":nome" => "justino",":sobrenome"=>"Kotingo",":id_c"=>4],
+	"telefone"=>[":numero"=>"956784596",":id_t"=>8]
+];
+
+//$u = $bd->updateContacto($up);
+
+//var_dump($u);
+
+$y = [
+	"telefone"=>[":id_t"=>8],
+	"email"=>[":id_e"=>2]
+];
+
+//$d = $bd->deleteContacto($y);
