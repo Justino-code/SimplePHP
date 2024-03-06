@@ -49,8 +49,16 @@ class Contacto{
 	}                                  
 	public function getEmail():array{      
 		return $this->email;                     }
-	public function setTelefone(array$tel){                    $this->telefone = $tel;
-	}                                               public function getTelefone():array{                       return $this->telefone;
+	public function setTelefone(array$tel){
+		foreach($tel as $valid_tel){
+			$valid = $this->validarNumero($valid_tel);
+			if($valid){
+				echo "numero invalido";
+			}
+		}
+		$this->telefone = $tel;
+	}         
+	public function getTelefone():array{                       return $this->telefone;
 	}                                      
 	public function setEmpresa(array$emp){                    $this->empresa = $emp;
 	}                                               public function getEmpresa():array{                        return $this->empresa;

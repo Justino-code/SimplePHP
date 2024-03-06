@@ -23,7 +23,7 @@ abstract class CBD{
 
 		}catch(PDOException $e){
 			echo "Error! {$e->getMessage()}";
-			die();
+			exit();
 		}
 	}
 
@@ -40,12 +40,12 @@ abstract class CBD{
 		
 		if ($param){
 			$key = array_keys($param);
-		       	$value = array_values($param);
+			$value = array_values($param);
 			for($i = 0; $i < count($param); $i++){
 				$std->bindParam($key[$i],$value[$i]);
 				$count += 1;
 				if($count == count($param)){
-					//$ret = $std->execute()?true:false;
+					$ret = $std->execute()?true:false;
 				}
 			}
 		}else{

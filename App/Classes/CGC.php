@@ -2,9 +2,12 @@
 namespace App\Classes;
 
 use App\Interfaces\IGC;
+use App\Traits\TVC;
 
  /**
-  * CGC (classe Gerenciar contacto) implementa o IGC (Interface Gerenciar Contacto).
+  * CGC (classe Gerenciar contacto) implementa 
+  * o IGC (Interface Gerenciar Contacto).
+  * e usa o TVC (Trait Validar Contacto)
   * @method adicionarContacto
   * @method editarContacto
   * @method excluirContacto
@@ -13,10 +16,12 @@ use App\Interfaces\IGC;
   * @param $contacto array
   */
 class CGC implements IGC{
+	//Trait Validar Contacto
+	use TVC;
 	/**
 	 * propriedade $contacto aramazena os dados do contacto em um array
 	 */
-	$contacto = array();
+	//$contacto = array();
 	/**
 	 * adiciona um novo contacto
 	 * @param contacto ($c) recebe um objecto contacto

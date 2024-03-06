@@ -2,33 +2,48 @@
 namespace App\Classes;
 
 use App\Classes\CBD;
+/**
+ * classe Responsável pela persistência dos contatos no banco de dados
+ */
 
 class ContactoDAO extends CBD{
-/**
- */
+	/**
+	 * construtor da classe ContactoDAO
+	 * herda o constritor d a classe pai CBD
+	 */
 	function __construct(){
 		parent::__construct(HOST,DB,USER,PWD);
 	}
 	/**
+	 * seleciona contacto no banco de dados
+	 * @param array $nome do contacto
+	 * @return array|boolean
 	 */
-	public function selectContacto($c):bool|array{
-		$keys = array_keys($c);
-		$k = [];
-		foreach($keys as $v){
-			//echo "left join $v on $v.id = ";
-		}
-		$table = implode(' left join ',$keys);
-		//$sql = "SELECT * FROM {$table} on telefone.id_c = contacto.id_c";
+	public function selectContacto($nome):bool|array{
+		$nome = "%{$nome}%";
+		$param = [':nome' => $nome];
+		$sql = "SELECT DISTINCT * FROM contacto 
+			LEFT JOIN telefone 
+			ON telefone.id_c = contacto.id_c 
+			LEFT JOIN email ON email.id_c = contacto.id_c 
+			LEFT JOIN emp_contacto ON emp_contacto.id_c = contacto.id_c 
+			LEFT JOIN empresa ON empresa.id_em = emp_contacto.id_em 
+			LEFT JOIN end_contacto ON end_contacto.id_c = contacto.id_c 
+			LEFT JOIN endereco ON endereco.id_end = end_contacto.id_end 
+			LEFT JOIN rede_social ON rede_social.id_c = contacto.id_c 
+			WHERE contacto.nome LIKE :nome";
 
-		//print($sql);
-		//echo "select Estudante.nome from Estudante";
-		$result = $this->consulta("SELECT DISTINCT * FROM contacto left join telefone on telefone.id_c = contacto.id_c left join email on email.id_c = contacto.id_c left join emp_contacto on emp_contacto.id_c = contacto.id_c left join empresa on empresa.id_em = emp_contacto.id_em left join end_contacto on end_contacto.id_c = contacto.id_c left join endereco on endereco.id_end = end_contacto.id_end left join rede_social on rede_social.id_c = contacto.id_c");
+		$result = $this->consulta($sql,$param);
 		return $this->getResult();
 	}
 	/**
+	 * Inseri um novo contacto no banco de dados
+	 * @param array $c(contacto) contém informações do novo contacto
+	 * @return boolean
 	 */
 	public function insertContacto(array$c):bool{
 		try{
+			//inicia uma transação
 			$this->iniciaTransacao();
 			foreach($c as $key => $v){
 				$param = implode(', ',array_keys($v));
@@ -49,6 +64,9 @@ class ContactoDAO extends CBD{
 		return true;
 	}
 	/**
+	 * Actualiza as informações do contacto
+	 * @param array $c(contacto) contém informações do contacto a ser actualizado
+	 * @return boolaen
 	 */
 	
 	public function updateContacto($c):bool{
@@ -81,6 +99,11 @@ class ContactoDAO extends CBD{
 		}
 		return true;
 	}
+	/**
+	 * Remove um contacto do banco de dados
+	 * @param $c(contacto) dados do contacto
+	 * @return boolean
+	 */
 	public function deleteContacto($c):bool{
 		try{
 			$this->iniciaTransacao();
