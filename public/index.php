@@ -2,22 +2,27 @@
 require_once("../App/autoloads/autoload.php");
 
 use App\Classes\CGC;
-use App\Classes\ContactoDAO;
+//use App\Classes\ContactoDAO;
 
 define("HOST","127.0.0.1");
 define("DB","Contacto");
 define("USER","justino");
 define("PWD","16242324");
 
-//$gc = new ContactoDAo();
+$gc = new CGC();
+//echo $gc->validarEmail("kj@gmail");
+//var_dump($gc->validarNumero("+55114444-4444"));
+//echo $gc->validarRedeSocial("https://facebook.com/meuperfil");
+//var_dump($gc->validarNome("justino_kotingo",0));
 
-$bd = new ContactoDAO();
+//$bd = new ContactoDAO();
 
-//$b = $bd->selectContacto("i");
-$data = new DateTime();
+//$b = $bd->selectContacto("");
+
+/*$data = new DateTime();
 $dataF = $data->format("Y-m-d H:i:s"); 
 
-$a = [
+$a = [ 
 	"contacto"=>
 	[":nome"=>"Justino",":sobrenome"=>"Kotingo", ":alcunha"=>"Sedrik",":dataC"=>$dataF,":dataUA"=>$dataF],
 
@@ -41,13 +46,25 @@ $c = [
 	"telefone"=>["numero"=>"931459010"],
 	"email"=>[]
 	/*"empresa"=>["nome"=>"Apple"]*/
-];
+//];
 
-$f = $bd->SelectContacto($c);
-print_r($f);
+/*$f = $bd->SelectContacto("");
+
+foreach($f as $v){
+	$key = array_keys($v);
+	for($i = 0; $i < count($key); $i++){
+		if($v[$key[$i]] == null)
+			continue;
+
+		echo $key[$i] ." | ".$v[$key[$i]]."\n"; 
+	}
+	//print_r($v);
+}
+//print_r($f);
+//var_dump($f);
 
 $up = [
-	"contacto"=> [":nome" => "justino",":sobrenome"=>"Kotingo",":id_c"=>4],
+	"contacto"=> [":nome" => "justino",":sobrenome"=>"Kotingo","dataUA"=>$dataF,":id_c"=>4],
 	"telefone"=>[":numero"=>"956784596",":id_t"=>8]
 ];
 
@@ -60,4 +77,4 @@ $y = [
 	"email"=>[":id_e"=>2]
 ];
 
-//$d = $bd->deleteContacto($y);
+//$d = $bd->deleteContacto($y);*/
