@@ -1,11 +1,15 @@
 <?php
 namespace App\Classes;
+use App\Traits\TVC;
+use App\Traits\TCE;
 
 /**
  * @param 
  */
 
 class Contacto{
+	use TVC;
+	use TCE;
 	#propridade nome é um array contendo o nome, sobrenome e alcunha, os ultimos dois (sobrenome e alcunha) são opcionais
 	private $nome = [];
 	#propriedade data de nascimento do contacto
@@ -31,6 +35,7 @@ class Contacto{
 	private $endereco;
 	#propriedade $id identificador unico do contacto
 	private $id;
+	private $erro =  [];
 
 	/*function __construct(array$nome,array$email,array$tel){
 		$this->setNome($nome);
@@ -40,30 +45,84 @@ class Contacto{
 
 	#metodos getters e setters
 	public function setNome(array$nome){
-		$this->nome = $nome;
-	}
-	public function getNome():array{
-		return $this->nome;
-	}
-	public function setEmail(array$email){                    $this->email = $email;
-	}                                  
-	public function getEmail():array{      
-		return $this->email;                     }
-	public function setTelefone(array$tel){
-		foreach($tel as $valid_tel){
-			$valid = $this->validarNumero($valid_tel);
+		foreach($nome as $k => $valid_n){
+			$valid = $this->validarNome($valid_n);
 			if($valid){
-				echo "numero invalido";
+				array_push($this->nome,[$k => $valid_n]);
+			}else{
+				$this->setErro( "{$k} {$valid_n} invalido");
 			}
 		}
-		$this->telefone = $tel;
+	}
+	public function getNome():array{
+		return call_user_func_array("array_merge",$this->nome);
+	}
+	public function setEmail(array$e){
+		$email = [];
+
+		foreach($e as $key => $v){
+			foreach($v as $k => $valid_e){
+				$valid = $this->validarEmail($valid_e);
+				if($valid){
+					array_push($email,[$k => $valid_e]);
+					$r = call_user_func_array("array_merge",$email);
+					array_push($this->email,[$key => $r]);
+				}else{
+					$this->setErro("Email {$valid_e} invalido");
+				}
+			}
+		}
+	}
+
+	public function getEmail():array|null{  	
+		return call_user_func_array("array_merge",$this->email);
+	}
+	public function setTelefone(array$tel){
+		$telefone = [];
+
+		foreach($tel as $key => $v){
+			foreach($v as $k => $valid_tel){
+				$valid = $this->validarNumero($valid_tel);
+				if($valid){
+					array_push($telefone,[$k => $valid_tel]);
+					$r = call_user_func_array("array_merge",$telefone);
+					array_push($this->telefone,[$key => $r]);
+				}else{
+					$this->setErro("numero {$valid_tel} está em um formato invalido");
+				}
+			}
+		}
 	}         
-	public function getTelefone():array{                       return $this->telefone;
-	}                                      
-	public function setEmpresa(array$emp){                    $this->empresa = $emp;
-	}                                               public function getEmpresa():array{                        return $this->empresa;
-	}                                               public function setNota(string$nota){                    $this->nota = $nota;
-	}                                               public function getNota():array{                       return $this->nota;                     }
+	public function getTelefone():array{
+		return call_user_func_array("array_merge",$this->telefone);	
+	}  
+
+	public function setEmpresa(array$emp){
+		$n = [];
+		foreach($emp as $k => $valid_emp){
+			$valid = $this->validarNome($valid_emp);
+			if(!$valid){
+				$this->setErro("{$k} {$valid_emp} invalido");
+				break;
+			}else{
+				array_push($n,[$k => $valid_emp]);
+				if(count($emp) == count($n)){
+					$this->empresa = call_user_func_array("array_merge",$n);
+				}
+			}
+		}
+	}  
+
+	public function getEmpresa():array{
+		if ($this->empresa == null){
+			return array();
+		}else{
+			return $this->empresa;
+		}
+	}                                               public function setNota(string$nota){                    $this->nota = strip_tags($nota);
+	}                                               public function getNota():string|null{
+		return $this->nota;
+	}
 	public function setDataC($data){                    $this->data_criacao = $data;
 	}                                               public function getDataC(){                       return $this->data_criacao;
 	}
@@ -74,14 +133,20 @@ class Contacto{
 		$this->endereco = $ende;
 	}
 	public function getEndereco():array{
-		return $this->endereco;
+		if($this->endereco == null){
+			return array();
+		}else{
+			return $this->endereco;
+		}
 	}
-	public function setCategoria(string$cg){
+	
+	/*public function setCategoria(string$cg){
 		$this->categoria =$cg;
 	}
 	public function getCategoria():string{
 		return $this->categoria;
-	} 
+	}*/
+
 	public function setId(int$id){
 		$this->id = $id;
 	}

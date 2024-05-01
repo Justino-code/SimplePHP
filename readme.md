@@ -21,6 +21,7 @@ Este projeto é um sistema de gerenciamento de contactos desenvolvido em PHP com
 - MySQL
 - HTML
 - CSS
+- JS
 
 ## Contribuição
 

@@ -1,5 +1,8 @@
 <?php
 namespace App\Traits;
+
+use Exception;
+;
 /**
  * Trait Validar Contacto 
  */
@@ -12,7 +15,7 @@ trait TVC{
 	 * @param $num (numero)
 	 * @return string | boolean
 	 */
-	protected function validarNumero(string$num):bool|string{
+	protected function validarNumero(string$num):bool{
 		//$num = filter_var($num,FILTER_SAN)
 		$p = [
 			"Angola" => "/^\\+244[0-9]{9}$/",
@@ -27,7 +30,7 @@ trait TVC{
 		foreach($this->getNumValido() as $padrao){
 			foreach($padrao as $k => $v){
 				if(preg_match($v,$num)){
-					return $num;
+					return true;
 					break;
 				}
 			}
@@ -38,16 +41,16 @@ trait TVC{
 	 * @param $email 
 	 * @return boolean | string
 	 */
-	protected function validarEmail(string$email):bool|string{
+	protected function validarEmail(string$email):bool{
 		$email = filter_var($email,FILTER_SANITIZE_EMAIL);
 		$email = filter_var($email,FILTER_VALIDATE_EMAIL);
-		return ($email);
+		return $email?true:false;
 	}
 	/**
 	 * @param $link
 	 * @return string | boolean
 	 */
-	protected function validarRedeSocial($link):bool|string{
+	protected function validarRedeSocial($link):bool{
 		$redes_socias = [
 			"Facebook",
 			"YouTube",
@@ -84,22 +87,23 @@ trait TVC{
 			$rs = strtolower($rs);
 			$padrao = "/^https\:\/\/{$rs}/";
 			if(preg_match($padrao,$link)){
-				return $link;
+				return true;
 			}else{
 				return false;
 			}
 		}
 		return true;
 	}
-	protected function validarNome($nome,$type = true):bool|string{
+	protected function validarNome($nome,$type = true):bool{
 		if($type === false){
 			$p = "/^[a-zA-Z\s]/i";
 		}else{
 			$p = "/^[a-zA-Z]+$/i";
 		}
 		if(preg_match($p,$nome)){
-			return $nome;
+			return true;
 		}else{
+			throw new \Exception('Erro: Formato de nome encorreto');
 			return false;
 		}
 	}

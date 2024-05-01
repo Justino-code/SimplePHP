@@ -6,6 +6,6 @@ interface IGC{
 	function adicionarContacto($actt):bool;
 	function editarContacto($ectt):bool;
 	function excluirContacto($exctt):bool;
-	function buscarContacto():array;
-	function listarContacto():array;
+	function buscarContacto(string$nome,bool$type):array;
+	function listarContacto(int$offset):array;
 }

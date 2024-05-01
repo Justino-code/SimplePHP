@@ -1,15 +1,55 @@
 <?php
 require_once("../App/autoloads/autoload.php");
+require_once("../App/config/config.php");
 
-use App\Classes\CGC;
-//use App\Classes\ContactoDAO;
+use App\Classes\User;
 
-define("HOST","127.0.0.1");
-define("DB","Contacto");
-define("USER","justino");
-define("PWD","16242324");
+$user = new User('9','','');
+
+$user->add_user();
+
+/*use App\Classes\CGC;
+//use App\Classes\Contacto;
+
+//$c = new Contacto();
+/*$c->setNome([/*":nome"=>"Josue",":sobrenome"=>"Joboao",":alcunha"=>"Joas","oldname"=>"Josue"]);
+/*$c->setNota("sou justino");
+$c->setTelefone(["telefone1"=>[":numero"=>"+244920456789","oldnumero"=>"+244921747721"],"telefone2"=>[":numero"=>"+244956789120","oldnumero"=>"+244935469010"]/*,"telefone3"=>[":numero"=>"+244943961220"]]);
+
+//$c->setTelefone(["telefone1"=>["numero"=>"+244931459010","oldnumero"=>"+244956789265"]]);
+
+//print_r($c->getTelefone());
+
+$c->setEmail(["email1"=>[":email"=>"jkop15@gmail.com","oldemail"=>"jk2@gmail.com"],"email2"=>[":email"=>"jk32@gmail.com","oldemail"=>"jk1@gmail.com"]]);
+
+//print_r($c->getEmail());
+
+/*$c->setEmpresa(["nome"=>"facebook","cargo"=>"director"]);*/
+
+/*$data = new DateTime();
+$da = $data->format("Y-m-d H:i:s");
+$c->setDataC($da);
+$c->setDataUA($da);
+
+//print_r($c->getErro());
+
+//$m = call_user_func_array("array_merge",($c->getNome()));
+//print_r($c->getEmail());
+
+$c->setNome([":nome" => "justino"]);
+$c->setTelefone(["telefone1"=>[":numero"=>"+244931459010"]]);
+$c->setEmail(["email1"=>[":email"=>"jk@gmail.com"]]);
 
 $gc = new CGC();
+//$gc->adicionarContacto($c);
+//$gc->editarContacto($c);
+//$gc->excluirContacto($c);
+//print_r($gc->listarContacto(10));
+print_r($gc->getErro());
+//$z = $gc->buscarContacto("Samuel");
+//print_r($z); 
+//$gc->qtdContacto();
+
 //echo $gc->validarEmail("kj@gmail");
 //var_dump($gc->validarNumero("+55114444-4444"));
 //echo $gc->validarRedeSocial("https://facebook.com/meuperfil");
@@ -20,7 +60,7 @@ $gc = new CGC();
 //$b = $bd->selectContacto("");
 
 /*$data = new DateTime();
-$dataF = $data->format("Y-m-d H:i:s"); 
+$dataF = $data->format("Y-m-d H:i:s");
 
 $a = [ 
 	"contacto"=>
@@ -33,6 +73,9 @@ $a = [
 	"email"=>[":email"=>"jks@gmail", ":id_c"=>4],
 	"email2"=>[":email"=>"jkj@gmail",":id_c"=>4]
 ];
+
+print_r($a);
+
 
 $b = [
 	"Estudante" =>

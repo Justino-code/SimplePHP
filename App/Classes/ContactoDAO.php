@@ -7,6 +7,9 @@ use App\Classes\CBD;
  */
 
 class ContactoDAO extends CBD{
+	private $lastId;
+	private $id;
+	private $erro = [];
 	/**
 	 * construtor da classe ContactoDAO
 	 * herda o constritor d a classe pai CBD
@@ -19,21 +22,27 @@ class ContactoDAO extends CBD{
 	 * @param array $nome do contacto
 	 * @return array|boolean
 	 */
-	public function selectContacto($nome):bool|array{
-		$nome = "%{$nome}%";
-		$param = [':nome' => $nome];
-		$sql = "SELECT DISTINCT * FROM contacto 
-			LEFT JOIN telefone 
-			ON telefone.id_c = contacto.id_c 
-			LEFT JOIN email ON email.id_c = contacto.id_c 
-			LEFT JOIN emp_contacto ON emp_contacto.id_c = contacto.id_c 
-			LEFT JOIN empresa ON empresa.id_em = emp_contacto.id_em 
-			LEFT JOIN end_contacto ON end_contacto.id_c = contacto.id_c 
-			LEFT JOIN endereco ON endereco.id_end = end_contacto.id_end 
-			LEFT JOIN rede_social ON rede_social.id_c = contacto.id_c 
-			WHERE contacto.nome LIKE :nome";
-
-		$result = $this->consulta($sql,$param);
+	public function selectContacto($nome=null,$type=false,int$offset=null):bool|array{
+		if($nome && !$type){
+			$param = [':nome' => $nome];
+			$sql = "SELECT c.nome, c.sobrenome, c.alcunha, t.numero, e.email, c.nota, c.dataC, c.dataUA FROM contacto c
+			LEFT JOIN telefone t ON t.id_c = c.id_c
+			LEFT JOIN email e ON e.id_c = t.id_c 
+			WHERE t.id_c = (SELECT id_c FROM contacto WHERE nome = :nome)";
+			$result = $this->consulta($sql,$param);
+		}
+		elseif((!$nome && !$type) && $offset){
+			$limit = 20;
+			$param = [':limit'=>$limit,':offset'=>$offset];
+			$sql = "SELECT nome, sobrenome, alcunha FROM contacto LIMIT :limit OFFSET :offset";
+			$this->consulta($sql,$param);
+		}
+		elseif($nome && $type){
+			$nome = "%{$nome}%";
+			$param = [':nome' => $nome];
+			$sql = "SELECT nome, sobrenome, alcunha FROM contacto WHERE nome LIKE :nome";
+			$this->consulta($sql,$param);
+		}
 		return $this->getResult();
 	}
 	/**
@@ -41,24 +50,48 @@ class ContactoDAO extends CBD{
 	 * @param array $c(contacto) contém informações do novo contacto
 	 * @return boolean
 	 */
-	public function insertContacto(array$c):bool{
+	protected function insertContacto(array$c):bool{
 		try{
 			//inicia uma transação
 			$this->iniciaTransacao();
-			foreach($c as $key => $v){
-				$param = implode(', ',array_keys($v));
-				$key = preg_replace("/(\d+)/i",'',$key);
-				$keys = str_replace(':','',$param);
-				$sql = "INSERT INTO {$key}({$keys})VALUES({$param})";
-				
-				$this->consulta($sql,$v);
+
+			for($i = 0; $i < 2; $i++){
+				if($i == 0){
+					$tbCont = $c['contacto'];
+					$param = implode(', ',array_keys($tbCont));
+					$key = preg_replace("/(\d+)/i",'',array_keys($c)[0]);
+				       	$keys = str_replace(':','',$param);
+					$sql = "INSERT INTO {$key}({$keys})VALUES({$param})";
+					$this->consulta($sql,$tbCont);
+
+				}
+
+				if($i == 1){
+					$this->setLastId();
+					array_shift($c);
+					foreach($c as $k => $v3){
+						$k2 = preg_replace('/(\d+)/i','',$k);
+						if($k2 == "telefone"){
+							$keys = [":numero",":id_c"];
+						}
+						elseif($k2 == "email"){
+							$keys = [":email",":id_c"];
+						}
+						array_push($v3,$this->getLastId());
+						$v2 = array_combine($keys,$v3);
+						$param = implode(', ',array_keys($v2));
+						$keys2 = str_replace(':','',$param);
+						$sql = "INSERT INTO {$k2}({$keys2})VALUES({$param})";
+						$this->consulta($sql,$v2);
+					}
+				}
 			}
 
 			$this->enviaTransacao();
 
 		}catch(Exception $e){
 			$this->desfazTransacao();
-			//echo "Error! ".$e->getMessage();
+			$this->setErro("Erro ao adicionar contacto");
 			return false;
 		}
 		return true;
@@ -69,23 +102,41 @@ class ContactoDAO extends CBD{
 	 * @return boolaen
 	 */
 	
-	public function updateContacto($c):bool{
-		try{                                                    $this->iniciaTransacao();
+	protected function updateContacto($c):bool{	
+		try{
+			$this->iniciaTransacao();
 			foreach($c as $key => $v){
-				$na = [];
-				$nb = [];
+				$paramArray = [];
+				$a = array_pop($v);
+
 				foreach(array_keys($v) as $v2){
-					if(strpos($v2,'_')){
-						array_push($nb,str_replace(':','',$v2)." = ".$v2);
-						continue;
-					}
-					array_push($na,str_replace(':','',$v2)." = ".$v2);
+					array_push($paramArray,str_replace(':','',$v2)." = ".$v2);
 				}
 
-				$param = implode(', ',$na);
-				$id = implode(', ', $nb);
+				$paramStr = implode(', ',$paramArray);
+				$key = preg_replace('/(\d+)/i','',$key);
 
-			       	$sql = "UPDATE {$key} SET {$param} WHERE {$id} ";
+				if($key == "contacto"){
+					$atr = "id_c";
+					$cond = "nome = '{$a}'";
+				}
+				elseif($key == "telefone"){
+					$atr = 'id_t';
+					$cond = "numero = '{$a}'";
+				}
+				elseif($key == "email"){
+					$atr = "id_e";
+					$cond = "email = '{$a}'";
+				}
+				$this->setId($key,$cond,$atr);
+				$id = $this->getId();
+				if(!$id){
+					$e = str_replace('= ','',$cond);
+					$this->setErro("Erro: {$e} não existe");
+					continue;
+				}
+				$sql = "UPDATE {$key} SET {$paramStr} WHERE {$atr} = {$id}";
+
 				$this->consulta($sql,$v);
 		}
 		
@@ -94,35 +145,102 @@ class ContactoDAO extends CBD{
 		}catch(Exception $e){
 			$this->desfazTransacao()
 ;
-			//echo "Error! ".$e->getMessage();
+			$this->setErro("Error ao  actualizar contacto");
 			return false;
 		}
 		return true;
 	}
+
 	/**
-	 * Remove um contacto do banco de dados
-	 * @param $c(contacto) dados do contacto
+	 * Remove tudo sobre um contacto
+	 * @param array $c(contacto)
 	 * @return boolean
 	 */
-	public function deleteContacto($c):bool{
+	protected function deleteContacto($c):bool{
 		try{
 			$this->iniciaTransacao();
 			foreach($c as $k=>$v){
-				$nb = [];
-				foreach(array_keys($v) as $v2){
-					array_push($nb,str_replace(':','',$v2)." = ".$v2);
+				$k = preg_replace('/(\d+)/i','',$k);
+
+				$key_exist = array_key_exists('contacto',$c);
+				if($k == "contacto" || $key_exist){
+					$key = "contacto";
+					$atr = 'id_c';
+					$cond = "nome = '{$c['contacto'][':nome']}'";
 				}
-				$id = implode(',',$nb);
-				$sql = "DELETE FROM {$k} WHERE {$id}";
-				$this->consulta($sql,$v);
-				//echo $sql."\n";
-			}
+				elseif($k == "telefone" && !$key_exist){
+					$key = "telefone";
+					$atr = 'id_t';
+					$cond = "numero = '{$v[':numero']}'";
+				}
+				elseif($k == "email" && !$key_exist){
+					$key = "email";
+					$atr = 'id_e';
+					$cond = "email = '{$v[':email']}'";
+				}
+				$this->setId($key ,$cond,$atr);                                                     $id = $this->getId();
+				$atr .= " = {$id}";
+
+				if(!$id){
+					$erro = str_replace('= ','',$cond);
+					$this->setErro("Erro: {$erro} não existe");
+					continue;
+				}
+				$sql = "DELETE FROM {$k} WHERE {$atr}";
+				$this->consulta($sql);
+				}
 	
 			$this->enviaTransacao();
 		}catch(Exception $e){
+			$this->setErro("Erro ao deletar contacto");
 			$this->desfazTransacao();
+
 			return false;
 		}
 		return true;
+	}
+
+	protected function setLastId(){
+		$this->consulta("select id_c from contacto");
+		$result = $this->getResult();
+		$id = call_user_func_array("array_merge",$result);
+		
+		$this->lastId = (int)($id["id_c"]);
+	}
+
+	protected function getLastId():int{
+		return $this->lastId;
+	}
+
+	protected function setId($tb,$nome,$id){
+		$sql = "SELECT {$id} FROM {$tb} WHERE {$nome}";
+
+		$this->consulta($sql);
+		$result = $this->getResult();
+		$id_ = call_user_func_array("array_merge",$result);
+		if($id_){
+			$this->id = $id_[$id];
+		}else{
+			$this->id = false;
+		}
+	}
+
+	protected function getId():int|bool{
+		return $this->id;
+	}
+
+	/*private function setErro(string $e){
+		array_push($this->erro,$e);
+	}
+
+	protected function getErro():array{
+		return array_unique($this->erro);
+	}*/
+
+	protected function getQtdContacto():array{
+		$sql = "SELECT COUNT(id_c) AS total_contacto FROM contacto";
+		$this->consulta($sql);
+		return call_user_func_array("array_merge",$this->getResult());
+
 	}
 }
