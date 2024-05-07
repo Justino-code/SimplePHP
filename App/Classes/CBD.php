@@ -3,6 +3,7 @@ namespace App\Classes;
 
 use PDO;
 use PDOException;
+use Exception;
 
 /**
  * abstract class
@@ -21,8 +22,7 @@ abstract class CBD{
 		try{
 			$this->con = new PDO("mysql:host={$host};dbname={$db};charset=utf8",$user,$pwd,array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 
-		}catch(PDOException $e){
-			//echo "Error! {$e->getMessage()}";
+		}catch(\PDOException $e){
 			$this->setErro("Erro ao se conectar com banco de dados código de erro [{$e->getCode()}]");
 			//exit();
 		}
@@ -30,11 +30,17 @@ abstract class CBD{
 
 	/**
 	 *@param $sql recebe uma string com uma consulta sql
-	 *@param $param recebe um array associativo contendo os parametros da consulta ex $param = ["nome" => "Justino"] ou $param = [$key,$value
+	 *@param $param recebe um array associativo contendo os parametros da consulta ex $param = ["nome" => "Justino"] ou $param = [$key => $value]
 	 */
 	protected function consulta(string$sql,array$param=null){
 		try{
 			$stm = $this->con;
+
+			if (!$stm){
+				$this->setErro('Erro! Objecto $pdo não foi inicializado. Verifique a sua conexão');
+				throw new PDOException();
+			}
+
 			$std = $stm->prepare($sql);
 			$ret = false;
 			$count = 0;
@@ -61,9 +67,12 @@ abstract class CBD{
 				$std->execute();
 		}
 		
-		$this->setResult($std);
+			$this->setResult($std);
+			return true;
+
 		}catch(PDOException $e){
 			$this->setErro("Erro ao fazer uma consulta sql código de erro [{$e->getCode()}]");
+			return false;
 		}
 
 	}

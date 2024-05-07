@@ -4,9 +4,14 @@ require_once("../App/config/config.php");
 
 use App\Classes\User;
 
-$user = new User('9','','');
+$user = new User('justino','pedro','jk@gmail.com','sedrik');
 
-$user->add_user();
+//$user->add_user();
+//print_r($user->getEmail());
+//$user->remove_user($user->getEmail());
+//$user->up_user([':nome'=>'justino5']);
+//var_dump(display_error());
+//print_r($user->getErro());
 
 /*use App\Classes\CGC;
 //use App\Classes\Contacto;

@@ -94,7 +94,7 @@ trait TVC{
 		}
 		return true;
 	}
-	protected function validarNome($nome,$type = true):bool{
+	protected function validarNome($nome,$type = true, $smg = null):bool{
 		if($type === false){
 			$p = "/^[a-zA-Z\s]/i";
 		}else{
@@ -103,7 +103,10 @@ trait TVC{
 		if(preg_match($p,$nome)){
 			return true;
 		}else{
-			throw new \Exception('Erro: Formato de nome encorreto');
+			if (!$smg){
+				$smg = 'Formato de nome encorreto';
+			}
+			throw new \Exception('Erro: '.$smg);
 			return false;
 		}
 	}
