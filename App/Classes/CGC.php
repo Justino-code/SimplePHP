@@ -15,30 +15,30 @@ use App\Traits\TCE;
   * @method buscarContacto
   * @method listarContacto
   */
-class CGC extends ContactoDAO implements IGC{
+abstract class CGC extends ContactoDAO implements IGC{
 	use TCE;
 	/**
 	 * adiciona um novo contacto
 	 * @param contacto ($c) recebe um objecto contacto
 	 * @return boolean
 	 */
-	public function adicionarContacto($c):bool{
-		$infoCont = array_filter(array_merge($c->getNome(),[":nota"=>$c->getNota(),":dataC"=>$c->getDataC(),":dataUA"=>$c->getDataUA()]),function($v){if($v){return $v;}});
+	public function adicionarContacto():bool{
+		$infoCont = array_filter(array_merge($c->getNome(),[":nota"=>$this->getNota(),":dataC"=>$c->getDataC(),":dataUA"=>$this->getDataUA()]),function($v){if($v){return $v;}});
 
 		$emp_end = [
-			"empresa"=>$c->getEmpresa(),
-			"endereco"=>$c->getEndereco()
+			"empresa"=>$this->getEmpresa(),
+			"endereco"=>$this->getEndereco()
 		];
 
 		if(!array_key_exists(":nome",$infoCont)){
-			$c->setErro("O nome do contacto está vazio. Porfavor adicione um nome");
+			$this->setErro("O nome do contacto está vazio. Porfavor adicione um nome");
 		}
-		$this->setErro($c->getErro());
+		//$this->setErro($this->getErro());
 
-		if(count($c->getErro()) > 0){
+		if(count($this->getErro()) > 0){
 			return false;
 		}else{
-			$contacto = array_filter(array_merge(["contacto"=>$infoCont],$c->getTelefone(),$c->getEmail(),$emp_end),function($v){if($v){return $v;}});
+			$contacto = array_filter(array_merge(["contacto"=>$infoCont],$this->getTelefone(),$this->getEmail(),$emp_end),function($v){if($v){return $v;}});
 
 			$this->insertContacto($contacto);
 			echo $this->getLastId();
@@ -50,10 +50,10 @@ class CGC extends ContactoDAO implements IGC{
 	 * @param $contacto recebe um  objecto contacto
 	 * @return boolean
 	 */
-	public function editarContacto($c):bool{
-		$contacto = ["contacto"=>$c->getNome()];
+	public function editarContacto():bool{
+		$contacto = ["contacto"=>$this->getNome()];
 
-		$editCont = array_merge($contacto,$c->getTelefone(),$c->getEmail());
+		$editCont = array_merge($contacto,$c->getTelefone(),$this->getEmail());
 
 		$this->updateContacto($editCont);
 		//print_r($this->getErro());
@@ -64,10 +64,10 @@ class CGC extends ContactoDAO implements IGC{
 	 * @param $contacto recebe um objecto contacto
 	 * @return boolean
 	 */
-	public function excluirContacto($c):bool{
-		$infoCont = ["contacto"=>$c->getNome()];
+	public function excluirContacto():bool{
+		$infoCont = ["contacto"=>$this->getNome()];
 
-		$contacto = array_merge($c->getTelefone(),$c->getEmail(),$infoCont);
+		$contacto = array_merge($this->getTelefone(),$this->getEmail(),$infoCont);
 		$this->deleteContacto($contacto);	
 		return true;
 	}

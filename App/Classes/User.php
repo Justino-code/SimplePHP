@@ -1,10 +1,17 @@
 <?php
+/**
+ * Classse User (usuário) represeta o usuário no sistema
+ * herda UserDAO e implementa uma UserInter (Intertace Usuário)
+ */
 namespace App\Classes;
 
 use App\Interfaces\UserInter;
+
+use App\Classes\UserDAO;
+use App\Classes\Contacto;
+
 use App\Traits\TVC;
 use App\Traits\TCE;
-use App\Classes\UserDAO;
 
 class User extends UserDAO implements UserInter{
 	use TVC;
@@ -14,19 +21,28 @@ class User extends UserDAO implements UserInter{
 	private $sobrenome;
 	private $alcunha;
 	private $email;
+	private $pass;
 	private $userr = [];
-	private $contacto = [];
+	public $contacto;
 
-	public function __construct($n,$s,$e,$a=null){
+	public function __construct($e,$p){
 		parent::__construct();
-		$this->setNome($n);
-		$this->setSobrenome($s);
-		$this->setEmail($e);
 
-		if ($a){
-			$this->setAlcunha($a);
+		$this->setEmail($e);
+		$this->setPass($p);
+
+		if($this->login_user()){
+			$this->contacto = new Contacto();
+			//echo$this->login_user();
+			echo $this->validarPass('12345678');
 		}
 	}
+
+	/**
+	 * @method add_user()
+	 * @return bool
+	 * método permite cadastrar um usuário
+	 */
 
 	public function add_user():bool{
 		$n = $this->getNome();
@@ -51,6 +67,12 @@ class User extends UserDAO implements UserInter{
 		return false;
 	}
 
+	/**
+	 * @method remove_user()
+	 * @return bool
+	 * método permite remover um usuário
+	 */
+
 	public function remove_user($email):bool{
 		$this->setUserId($email);
 		$id = $this->getUserId();
@@ -68,6 +90,12 @@ class User extends UserDAO implements UserInter{
 		}	
 	}
 
+	/**
+	 * @method up_user()
+	 * @return bool
+	 * método permite actualizar os dados do usuário
+	 */
+
 	public function up_user(array$user):bool{
 		$email = $this->getEmail();
 		$this->setUserId($email);
@@ -84,11 +112,12 @@ class User extends UserDAO implements UserInter{
 		}
 	}
 
-	public function gerirContacto($contacto){
-
+	private function login_user():bool{
+		$this->validarPass('11111111');
+		return true;
 	}
 
-			public function setNome(string $nome){
+	public function setNome(string $nome){
 		$this->nome = $nome;
 	}
 	public function getNome():string{
@@ -116,18 +145,17 @@ class User extends UserDAO implements UserInter{
 		return $this->email;
 	}
 
+	public function setPass($pass){
+		$this->pass = $pass;
+	}
+	public function getPass():string{
+		return $this->pass;
+	}
+
 	public function setUser(array $user){
 		$this->userr = $user;
 	}
 	public function getUser():array{
 		return $this->userr;
-	}
-
-	public function setContacto($contacto){
-		$this->contacto = $contacto;
-	}
-
-	public function getContacto():array{
-		return $this->contacto;
 	}
 }

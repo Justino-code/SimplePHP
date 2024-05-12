@@ -4,7 +4,7 @@ require_once("../App/config/config.php");
 
 use App\Classes\User;
 
-$user = new User('justino','pedro','jk@gmail.com','sedrik');
+$user = new User('jk@gmail.com','12345678');
 
 //$user->add_user();
 //print_r($user->getEmail());
@@ -12,6 +12,10 @@ $user = new User('justino','pedro','jk@gmail.com','sedrik');
 //$user->up_user([':nome'=>'justino5']);
 //var_dump(display_error());
 //print_r($user->getErro());
+
+//$user->contacto->setNome([":nome"=>"Josue",":sobrenome"=>"Joboao",":alcunha"=>"Joas"]);
+
+//print_r($user->contacto->getNome());
 
 /*use App\Classes\CGC;
 //use App\Classes\Contacto;

@@ -1,13 +1,15 @@
 <?php
 namespace App\Classes;
+
+use App\Classes\CGC;
 use App\Traits\TVC;
 use App\Traits\TCE;
 
 /**
- * @param 
+ * Classe Contacto herda CGC (Classe Gerenciar Contacto) usa os Traits TVC (Trait Validar Contacto) e o TCE (Trait Contacto Erro) 
  */
 
-class Contacto{
+class Contacto extends CGC{
 	use TVC;
 	use TCE;
 	#propridade nome é um array contendo o nome, sobrenome e alcunha, os ultimos dois (sobrenome e alcunha) são opcionais
@@ -147,10 +149,10 @@ class Contacto{
 		return $this->categoria;
 	}*/
 
-	public function setId(int$id){
+	/*public function setId(int$id){
 		$this->id = $id;
 	}
 	public function getId():int{
 		return $this->id;
-	}
+	}*/
 }

@@ -94,6 +94,12 @@ trait TVC{
 		}
 		return true;
 	}
+	/**
+	 * @method validarNome
+	 * @param $nome -> nome a ser validado
+	 * @param $type -> tipo de composição do nome pode ser nomes com número ou não (ex: com número -> Justino04, sem número -> Justino)
+	 * @param $smg -> uma mensagem de erro a ser exibida quando não atende o padrão (default= true -> sem número)	
+	 */
 	protected function validarNome($nome,$type = true, $smg = null):bool{
 		if($type === false){
 			$p = "/^[a-zA-Z\s]/i";
@@ -107,6 +113,24 @@ trait TVC{
 				$smg = 'Formato de nome encorreto';
 			}
 			throw new \Exception('Erro: '.$smg);
+			return false;
+		}
+	}
+
+	/**
+	 * @method validarPass()
+	 * @param $pass (palavra passe a ser validada) 8 caracteres no mínimo e 20 no máximo
+	 * @return string|bool
+	 * valida uma palavra passe
+	 */
+	protected function validarPass(string$pass):string|bool{
+		$count = strlen($pass);
+		$pattern = "/^[a-zA-Z0-9]/i";
+
+		if($count > 8 && $count < 20 ){
+			return true;
+		}else{
+			throw new \Exception('Erro! Palavra passe tem que ter no mínimo 8 caracter e no máximo 20');
 			return false;
 		}
 	}
