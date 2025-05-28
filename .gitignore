@@ -1,0 +1,32 @@
+# Composer
+/vendor/
+/composer.lock
+
+# Ambiente
+.env
+
+# Cache e logs
+/storage/
+*.log
+*.cache
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários
+*.bak
+*.tmp
+*.swp
+
+# Uploads
+/public/uploads/
+
+# Outros
+doc.md
