@@ -1,0 +1,24 @@
+{
+  "name": "Justino-code/simlpephp",
+  "description": "Microframework PHP para projetos pequenos e rápidos.",
+  "type": "project",
+  "require": {
+    "vlucas/phpdotenv": "^5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "SPHP\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "Justno Contingo",
+      "email": "protectedUm@proton.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "license": "MIT"
+}
