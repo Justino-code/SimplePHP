@@ -15,7 +15,7 @@ Certifique-se de ter:
 - O arquivo `.env` configurado com as credenciais do banco:
   ```env
   DB_HOST=localhost
-  DB_NAME=tech_db
+  DB_NAME=sphp
   DB_USER=root
   DB_PASS=
   DB_CHARSET=utf8mb4
@@ -73,9 +73,8 @@ my-project/
 ├── sql/
 │   └── schema.sql         # Script com as instruções SQL
 ├── src/
-│   └── Database/
-│       └── Deprecated/
-│           └── CreateDatabaseAndTables.php
+│    └── Deprecated/
+│         └── CreateDatabaseAndTables.php
 ├── installer.php          # Arquivo responsável por executar a instalação
 └── .env                   # Arquivo com dados de conexão
 ```
@@ -96,4 +95,4 @@ Sinta-se à vontade para abrir issues, enviar pull requests ou sugerir melhorias
 
 ## 📄 Licença
 
-Distribuído sob a licença [MIT](../../LICENSE).
+Distribuído sob a licença [MIT](LICENSE).
