@@ -17,7 +17,7 @@ class Installer {
             $this->createTablesIfNotExistsFromFile(__DIR__ . '/sql/schema.sql');
         }
 
-        if ($task === 'admin' || $task === 'all') {
+        if ($task === 'admin') {
             $this->connectToDatabase();
             $this->insertAdminIfNotExists();
         }

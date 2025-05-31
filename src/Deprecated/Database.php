@@ -1,6 +1,6 @@
 <?php
 
-namespace SPHP\Database\Deprecated;
+namespace SPHP\Deprecated;
 
 use PDO;
 use PDOException;
@@ -14,15 +14,15 @@ class Database
     private $charset;
     private $pdo;
 
-    use CreateDatabaseAndTables;
-
     public function __construct()
     {
         $this->host    = $_ENV['DB_HOST'] ?? 'localhost';
-        $this->db      = $_ENV['DB_NAME'] ?? 'tech_db'; // Defina o nome do banco de dados
+        $this->db      = $_ENV['DB_NAME'] ?? 'sphp1'; // Defina o nome do banco de dados
         $this->user    = $_ENV['DB_USER'] ?? 'root';
         $this->pass    = $_ENV['DB_PASS'] ?? '';
         $this->charset = $_ENV['DB_CHARSET'] ?? 'utf8mb4';
+
+        $this->connectToDatabase();
     }
 
     private function connectToDatabase()

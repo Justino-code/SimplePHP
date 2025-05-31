@@ -30,6 +30,12 @@
             
             <div class="alert alert-info mt-4">
         Você pode começar personalizando esta página em <code>views/welcome.php</code>.
+
+        <p>Teste rota user <code>$router->get('/users', [UserController::class, 'index']);</code>.</p>
+
+        <a href="/users" class="btn btn-outline-dark mt-3" target="_self">
+                Users
+            </a>
     </div>
 
             <a href="https://github.com/Justino-code/SimplePHP" class="btn btn-outline-dark mt-3" target="_blank">

@@ -7,7 +7,8 @@
   },
   "autoload": {
     "psr-4": {
-      "SPHP\\": "src/"
+      "SPHP\\": "src/",
+      "App\\": "app"
     },
     "files": [
       "src/helpers/helpers.php",
@@ -16,7 +17,7 @@
   },
   "authors": [
     {
-      "name": "Justno Contingo",
+      "name": "Justno",
       "email": "protectedUm@proton.com"
     }
   ],

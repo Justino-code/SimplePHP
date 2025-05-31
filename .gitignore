@@ -29,7 +29,8 @@ Thumbs.db
 /public/uploads/
 
 # Outros
-doc.md
+doc.*
+doc2.txt
 
 # Testes
 /tests/

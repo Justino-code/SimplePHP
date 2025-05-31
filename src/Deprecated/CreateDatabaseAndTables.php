@@ -1,6 +1,6 @@
 <?php
 
-namespace SPHP\\Deprecated;
+namespace SPHP\Deprecated;
 
 use PDO;
 use PDOException;

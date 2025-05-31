@@ -1,10 +1,10 @@
 <?php
-namespace SPHP\Database;
+namespace SPHP\Deprecated;
 
 use PDO;
-use SPHP\Database\Deprecated\Database;
+use SPHP\Deprecated\Database;
 
-abstract class Model
+abstract class BaseModel
 {
     protected PDO $pdo;
     protected $table;

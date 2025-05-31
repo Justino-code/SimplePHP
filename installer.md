@@ -32,7 +32,7 @@ Certifique-se de ter:
 Execute o seguinte comando:
 
 ```bash
-php installer
+php installer.php
 ```
 
 Esse comando:
@@ -48,7 +48,7 @@ Esse comando:
 Você também pode passar o parâmetro `--admin` para recriar o admin padrão:
 
 ```bash
-php installer --admin
+php installer.php --admin
 ```
 
 Isso forçará a verificação e tentativa de inserção do admin novamente.
