@@ -1,18 +1,8 @@
 <?php
-namespace SPHP\Http\Response;
+namespace Src;
 
-/**
- * Classe de resposta HTTP. Permite retornar JSON, HTML ou texto simples.
- */
 class Response
 {
-    /**
-     * Retorna uma resposta JSON.
-     *
-     * @param array $data
-     * @param int $status
-     * @return void
-     */
     public function json(array $data, int $status = 200): void
     {
         http_response_code($status);
@@ -21,9 +11,6 @@ class Response
         exit;
     }
 
-    /**
-     * Retorna uma resposta de texto simples.
-     */
     public function plain(string $text, int $status = 200): void
     {
         http_response_code($status);
@@ -32,9 +19,6 @@ class Response
         exit;
     }
 
-    /**
-     * Retorna uma resposta HTML.
-     */
     public function html(string $html, int $status = 200): void
     {
         http_response_code($status);

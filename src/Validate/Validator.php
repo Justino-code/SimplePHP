@@ -1,6 +1,6 @@
 <?php
 
-namespace Src;
+namespace SPHP\Validate;
 
 use DateTime;
 

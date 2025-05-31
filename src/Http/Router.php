@@ -1,46 +1,68 @@
 <?php
-namespace Src;
+namespace SPHP\Http;
 
+use Closure;
 use ReflectionMethod;
 
+/**
+ * Classe responsável por registrar e despachar rotas HTTP.
+ */
 class Router
 {
     /**
-     * @var array Lista de rotas registradas por método HTTP.
+     * Lista de rotas registradas organizadas por método HTTP.
+     *
+     * @var array
      */
     private array $routes = [];
 
     /**
-     * @var array Lista de rotas nomeadas.
+     * Lista de rotas nomeadas.
+     *
+     * @var array
      */
     private array $namedRoutes = [];
 
     /**
      * Registra uma rota do tipo GET.
      *
-     * @param string $uri
-     * @param array $action [ControllerClass::class, 'método']
-     * @param array $middlewares
-     * @param string|null $name
+     * @param string $uri URI da rota (ex: '/home')
+     * @param callable|array $action Função anônima ou [Controller::class, 'método']
+     * @param array $middlewares Lista de middlewares (nomes de classes)
+     * @param string|null $name Nome opcional da rota
      * @return void
      */
-    public function get(string $uri, array $action, array $middlewares = [], ?string $name = null)
+    public function get(string $uri, callable|array $action, array $middlewares = [], ?string $name = null): void
     {
         $this->addRoute('GET', $uri, $action, $middlewares, $name);
     }
 
     /**
      * Registra uma rota do tipo POST.
+     *
+     * @param string $uri
+     * @param callable|array $action
+     * @param array $middlewares
+     * @param string|null $name
+     * @return void
      */
-    public function post(string $uri, array $action, array $middlewares = [], ?string $name = null)
+    public function post(string $uri, callable|array $action, array $middlewares = [], ?string $name = null): void
     {
         $this->addRoute('POST', $uri, $action, $middlewares, $name);
     }
 
     /**
-     * Adiciona uma nova rota ao roteador.
+     * Adiciona uma nova rota ao sistema.
+     *
+     * @param string $method Método HTTP (GET, POST, etc.)
+     * @param string $uri URI da rota
+     * @param callable|array $action Função anônima ou [Controller::class, 'método']
+     * @param array $middlewares Middlewares a aplicar
+     * @param string|null $name Nome opcional da rota
+     * @return void
+     * @throws \Exception
      */
-    private function addRoute(string $method, string $uri, array $action, array $middlewares, ?string $name = null)
+    private function addRoute(string $method, string $uri, callable|array $action, array $middlewares, ?string $name = null): void
     {
         $uri = '/' . trim($uri, '/');
 
@@ -72,10 +94,10 @@ class Router
     }
 
     /**
-     * Extrai os nomes dos parâmetros de uma URI.
+     * Extrai os nomes dos parâmetros definidos na URI.
      *
      * @param string $uri
-     * @return array
+     * @return array Lista de nomes dos parâmetros
      */
     private function extractParamNames(string $uri): array
     {
@@ -84,7 +106,7 @@ class Router
     }
 
     /**
-     * Despacha a requisição atual para a rota correta.
+     * Processa e despacha a requisição atual para a rota correspondente.
      *
      * @param string $requestUri
      * @param string $requestMethod
@@ -115,10 +137,20 @@ class Router
     }
 
     /**
-     * Executa a ação de um controller.
+     * Executa a ação da rota (controller ou função anônima).
+     *
+     * @param callable|array $action
+     * @param Request $request
+     * @param array $params
+     * @return mixed
+     * @throws \Exception
      */
-    private function callAction(array $action, Request $request, array $params = [])
+    private function callAction(callable|array $action, Request $request, array $params = [])
     {
+        if (is_callable($action)) {
+            return call_user_func_array($action, [$request, ...array_values($params)]);
+        }
+
         [$controllerClass, $method] = $action;
 
         if (!class_exists($controllerClass)) {
@@ -142,13 +174,14 @@ class Router
     }
 
     /**
-     * Cria o pipeline de middlewares.
+     * Monta o pipeline de execução dos middlewares.
      *
-     * @param array $middlewares
-     * @param callable $core
-     * @return callable
+     * @param array $middlewares Lista de middlewares (nomes de classes)
+     * @param callable $core Função principal (a rota em si)
+     * @return callable Pipeline final
+     * @throws \Exception
      */
-    private function buildMiddlewarePipeline(array $middlewares, callable $core)
+    private function buildMiddlewarePipeline(array $middlewares, callable $core): callable
     {
         return array_reduce(
             array_reverse($middlewares),
@@ -172,11 +205,12 @@ class Router
     }
 
     /**
-     * Gera uma URL a partir de uma rota nomeada.
+     * Gera uma URL com base em uma rota nomeada e parâmetros.
      *
-     * @param string $name
-     * @param array $params
+     * @param string $name Nome da rota
+     * @param array $params Parâmetros a substituir na URI
      * @return string
+     * @throws \Exception
      */
     public function route(string $name, array $params = []): string
     {

@@ -1,0 +1,6 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="12" fill="#1A1A1A"/>
+  <text x="8" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    S<tspan fill="#4FC3F7">PHP</tspan>
+  </text>
+</svg>

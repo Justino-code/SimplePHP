@@ -1,5 +1,5 @@
 {
-  "name": "Justino-code/simlpephp",
+  "name": "justino/simplephp",
   "description": "Microframework PHP para projetos pequenos e rápidos.",
   "type": "project",
   "require": {
@@ -10,7 +10,8 @@
       "SPHP\\": "src/"
     },
     "files": [
-      "src/helpers/helpers.php"
+      "src/helpers/helpers.php",
+      "init/init.php"
     ]
   },
   "authors": [

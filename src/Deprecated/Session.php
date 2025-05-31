@@ -1,23 +1,22 @@
 <?php
-namespace SPHP\Core;
 
-/**
- * Classe para gerenciamento de sessões de forma segura e simples.
- */
+namespace Src;
+
 class Session
 {
     public function __construct()
     {
+        // Inicia a sessão se ainda não tiver sido iniciada
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
     }
 
     /**
-     * Retorna um valor da sessão.
+     * Retorna um valor da sessão pelo nome da chave.
      *
-     * @param string $key
-     * @param mixed|null $default
+     * @param string $key     Nome da chave da sessão.
+     * @param mixed $default  Valor padrão caso a chave não exista.
      * @return mixed
      */
     public function get(string $key, $default = null)
@@ -27,6 +26,10 @@ class Session
 
     /**
      * Define um valor para uma chave na sessão.
+     *
+     * @param string $key    Nome da chave.
+     * @param mixed $value   Valor a ser armazenado.
+     * @return void
      */
     public function set(string $key, $value): void
     {
@@ -35,6 +38,9 @@ class Session
 
     /**
      * Verifica se uma chave existe na sessão.
+     *
+     * @param string $key
+     * @return bool
      */
     public function has(string $key): bool
     {
@@ -43,6 +49,9 @@ class Session
 
     /**
      * Remove uma chave da sessão.
+     *
+     * @param string $key
+     * @return void
      */
     public function forget(string $key): void
     {
@@ -51,6 +60,8 @@ class Session
 
     /**
      * Retorna todos os dados da sessão.
+     *
+     * @return array
      */
     public function all(): array
     {
@@ -58,7 +69,9 @@ class Session
     }
 
     /**
-     * Destroi completamente a sessão e seus dados.
+     * Destroi completamente a sessão e limpa os dados.
+     *
+     * @return void
      */
     public function destroy(): void
     {

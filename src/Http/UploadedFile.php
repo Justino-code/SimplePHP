@@ -1,6 +1,6 @@
 <?php
 
-namespace Src;
+namespace SPHP\Http;
 
 /**
  * Classe para manipulação de arquivos enviados via formulário (upload).

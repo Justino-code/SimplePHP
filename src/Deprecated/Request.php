@@ -1,8 +1,8 @@
 <?php
 
-namespace SPHP\Http;
+namespace Src;
 
-use SPHP\Http\UploadedFile;
+use Src\UploadedFile;
 
 class Request
 {

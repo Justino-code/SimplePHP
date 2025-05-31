@@ -1,8 +1,8 @@
 <?php
 
-use SPHP\Http\Response\Response;
-use SPHP\Core\Session;
-use SPHP\Response\RedirectResponse;
+use Src\Response;
+use Src\Session;
+use Src\RedirectResponse;
 
 /**
  * Retorna uma instância de Response para respostas JSON ou plain text.
@@ -98,8 +98,8 @@ if (!function_exists('view')) {
 	//dd($template);
 
         // Converte o ponto para barra (ex: 'home.contact' -> 'home/contact')
-        $templatePath = __DIR__ ."/../../app/views/" . str_replace('.', '/', $template) . '.php';
-        $layoutPath = __DIR__ . "/../../app/views/" . str_replace('.', '/', $layout) . '.php';
+        $templatePath = __DIR__ ."/../app/views/" . str_replace('.', '/', $template) . '.php';
+        $layoutPath = __DIR__ . "/../app/views/" . str_replace('.', '/', $layout) . '.php';
 	//dd($templatePath);
 
         // Verifica se a view existe
@@ -129,7 +129,8 @@ if (!function_exists('view')) {
         }
 
         // Retorna o conteúdo da view sem layout, se não houver layout
-        echo $content;
+	//echo $content;
+        return $content;
     }
 }
 
