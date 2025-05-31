@@ -1,5 +1,3 @@
-# ⚙️ MicroFramework PHP
-
 <p align="center">
   <img src="public/assets/logo/logo.svg" alt="SimplePHP Logo" width="200">
 </p>
@@ -113,8 +111,8 @@ Estes arquivos funcionam bem de forma independente e possuem **poucas dependênc
 // routes.php
 use Controllers\PostController;
 
-Router::get('/posts', [PostController::class, 'index']);
-Router::post('/posts', [PostController::class, 'store'], [AuthMiddleware::class]);
+$router->get('/posts', [PostController::class, 'index']);
+$router->post('/posts', [PostController::class, 'store'], [AuthMiddleware::class]);
 ```
 
 ---
